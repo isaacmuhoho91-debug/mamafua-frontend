@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MamaFua — Profile</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', sans-serif; background: #F5F8FF; }
+    :root {
+      --navy: #0D2B5E; --blue: #1565C0; --sky: #E3F2FD; --sky-dk: #BBDEFB;
+      --white: #ffffff; --off: #F5F8FF; --text: #1a1a2e; --muted: #5a6a85;
+      --border: #D0DFF5; --green: #0F6E56; --green-bg: #E8F5E9;
+      --amber: #F9A825; --radius: 14px; --shadow: 0 4px 24px rgba(13,43,94,0.10);
+    }
+    nav { background: var(--navy); padding: 0 24px; height: 62px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+    .nav-brand { font-family: 'Playfair Display', serif; font-size: 22px; color: #fff; text-decoration: none; }
+    .nav-back { color: var(--sky-dk); font-size: 13px; text-decoration: none; }
+    .nav-back:hover { color: #fff; }
+    .page { max-width: 900px; margin: 0 auto; padding: 28px 24px; display: grid; grid-template-columns: 1fr 300px; gap: 24px; align-items: start; }
+    .left { display: flex; flex-direction: column; gap: 16px; }
+    .card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+    .hero-banner { height: 90px; background: linear-gradient(135deg, var(--navy), var(--blue)); }
+    .hero-body { padding: 0 22px 22px; }
+    .hero-av-wrap { display: flex; align-items: flex-end; justify-content: space-between; margin-top: -32px; margin-bottom: 12px; }
+    .hero-av { width: 72px; height: 72px; border-radius: 50%; background: linear-gradient(135deg,#1565C0,#0D2B5E); border: 4px solid #fff; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 700; color: #fff; }
+    .hero-name { font-family: 'Playfair Display', serif; font-size: 24px; color: var(--text); margin-bottom: 6px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .badge-v { background: var(--green-bg); color: var(--green); font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 12px; }
+    .hero-meta { display: flex; gap: 14px; flex-wrap: wrap; font-size: 13px; color: var(--muted); margin-bottom: 12px; }
+    .star { color: var(--amber); }
+    .hero-tags { display: flex; gap: 8px; flex-wrap: wrap; }
+    .tag { background: var(--sky); color: var(--navy); font-size: 12px; padding: 4px 12px; border-radius: 12px; font-weight: 500; }
+    .card-header { padding: 16px 20px; border-bottom: 1px solid var(--border); font-size: 14px; font-weight: 600; color: var(--text); }
+    .card-body { padding: 20px; }
+    .bio-text { font-size: 14px; color: var(--muted); line-height: 1.8; }
+    .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .info-item { background: var(--off); border-radius: 10px; padding: 12px; }
+    .info-label { font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .8px; margin-bottom: 4px; }
+    .info-val { font-size: 14px; font-weight: 600; color: var(--text); }
+    .info-val.locked { color: var(--muted); font-weight: 400; font-size: 13px; }
+    .services-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .service-item { display: flex; align-items: center; gap: 8px; padding: 10px 12px; background: var(--off); border-radius: 10px; font-size: 13px; font-weight: 500; color: var(--text); }
+    .days-row { display: flex; gap: 8px; flex-wrap: wrap; }
+    .day-on { background: var(--green-bg); color: var(--green); padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: 500; }
+    .day-off { background: var(--off); color: var(--muted); padding: 6px 14px; border-radius: 20px; font-size: 13px; text-decoration: line-through; }
+    .booking-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); position: sticky; top: 82px; }
+    .booking-head { background: linear-gradient(135deg, var(--navy), var(--blue)); padding: 16px 20px; }
+    .booking-rate { font-family: 'Playfair Display', serif; font-size: 28px; color: #fff; }
+    .booking-rate span { font-family: 'Inter', sans-serif; font-size: 14px; color: var(--sky-dk); }
+    .booking-avail { font-size: 13px; color: var(--sky-dk); margin-top: 4px; display: flex; align-items: center; gap: 6px; }
+    .avail-dot { width: 8px; height: 8px; background: #4CAF50; border-radius: 50%; }
+    .booking-body { padding: 18px; }
+    .b-field { margin-bottom: 12px; }
+    .b-field label { display: block; font-size: 12px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .8px; margin-bottom: 5px; }
+    .b-field select, .b-field input { width: 100%; padding: 10px 12px; border: 1.5px solid var(--border); border-radius: 10px; font-size: 14px; font-family: 'Inter', sans-serif; color: var(--text); background: var(--white); outline: none; appearance: none; }
+    .b-field select:focus, .b-field input:focus { border-color: var(--blue); }
+    .price-box { background: var(--off); border-radius: 10px; padding: 12px; margin-bottom: 14px; }
+    .price-row { display: flex; justify-content: space-between; font-size: 13px; padding: 3px 0; }
+    .price-label { color: var(--muted); }
+    .price-total { border-top: 1px solid var(--border); margin-top: 8px; padding-top: 8px; display: flex; justify-content: space-between; font-size: 15px; font-weight: 700; color: var(--navy); }
+    .btn-book { width: 100%; background: var(--blue); color: #fff; border: none; padding: 13px; border-radius: 32px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: 'Inter', sans-serif; transition: background .15s; }
+    .btn-book:hover { background: var(--navy); }
+    .contact-notice { font-size: 12px; color: var(--muted); text-align: center; margin-top: 10px; line-height: 1.6; }
+    .loading { text-align: center; padding: 60px; color: var(--muted); }
+    @media (max-width: 700px) { .page { grid-template-columns: 1fr; } .booking-card { position: static; } .info-grid, .services-grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-brand">MamaFua</a>
+  <a href="browse.html" class="nav-back">← Back to search</a>
+</nav>
+
+<div class="page" id="page-content">
+  <div class="loading">Loading profile...</div>
+</div>
+
+<script>
+  const API = "https://mamafua-backend.onrender.com";
+  const mamaId = localStorage.getItem("selected_mama_id");
+
+  if (!mamaId) window.location.href = "browse.html";
+
+  async function loadProfile() {
+    try {
+      const res = await fetch(`${API}/api/mamas/${mamaId}`);
+      const m = await res.json();
+
+      if (!res.ok) {
+        window.location.href = "browse.html";
+        return;
+      }
+
+      const initials = m.name.split(" ").map(n => n[0]).join("").toUpperCase();
+      const services = (m.services || "").split(",").map(s => s.trim());
+      const days = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
+      const availDays = (m.available_days || "").split(",").map(d => d.trim());
+
+      const serviceItems = services.map(s =>
+        `<div class="service-item">✓ ${s}</div>`
+      ).join("");
+
+      const dayChips = days.map(d =>
+        availDays.includes(d)
+          ? `<div class="day-on">${d}</div>`
+          : `<div class="day-off">${d}</div>`
+      ).join("");
+
+      const rate = m.rate || 400;
+      const fee = Math.round(rate * 0.1);
+      const total = rate + fee;
+
+      document.getElementById("page-content").innerHTML = `
+        <div class="left">
+          <div class="card">
+            <div class="hero-banner"></div>
+            <div class="hero-body">
+              <div class="hero-av-wrap">
+                <div class="hero-av">${initials}</div>
+              </div>
+              <div class="hero-name">
+                ${m.name}
+                ${m.is_verified ? '<span class="badge-v">✓ Verified</span>' : ""}
+              </div>
+              <div class="hero-meta">
+                <span><span class="star">★</span> ${m.rating || "No ratings yet"}</span>
+                <span>📍 ${m.areas_covered || "Nairobi"}</span>
+                <span>✅ ${m.total_jobs} jobs done</span>
+                <span>🕐 ${m.experience} experience</span>
+                <span style="color:#4CAF50;font-weight:500;">${m.is_online ? "🟢 Available" : "⚫ Offline"}</span>
+              </div>
+              <div class="hero-tags">
+                ${services.map(s => `<div class="tag">${s}</div>`).join("")}
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">✍️ About ${m.name.split(" ")[0]}</div>
+            <div class="card-body">
+              <p class="bio-text">${m.bio || "No bio provided."}</p>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">📋 Profile details</div>
+            <div class="card-body">
+              <div class="info-grid">
+                <div class="info-item"><div class="info-label">Daily rate</div><div class="info-val">Ksh ${m.rate}</div></div>
+                <div class="info-item"><div class="info-label">Experience</div><div class="info-val">${m.experience}</div></div>
+                <div class="info-item"><div class="info-label">Areas covered</div><div class="info-val">${m.areas_covered}</div></div>
+                <div class="info-item"><div class="info-label">Jobs completed</div><div class="info-val">${m.total_jobs} ✅</div></div>
+                <div class="info-item"><div class="info-label">Member since</div><div class="info-val">${new Date(m.member_since).getFullYear()}</div></div>
+                <div class="info-item"><div class="info-label">Phone number</div><div class="info-val locked">🔒 Revealed after booking</div></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">🧺 Services offered</div>
+            <div class="card-body">
+              <div class="services-grid">${serviceItems}</div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">🗓️ Availability</div>
+            <div class="card-body">
+              <div class="days-row">${dayChips}</div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="booking-card">
+            <div class="booking-head">
+              <div class="booking-rate">Ksh ${rate} <span>/ day</span></div>
+              <div class="booking-avail">
+                <div class="avail-dot"></div> Available
+              </div>
+            </div>
+            <div class="booking-body">
+              <div class="b-field">
+                <label>Service date</label>
+                <input type="date" id="booking-date" min="${new Date().toISOString().split('T')[0]}"/>
+              </div>
+              <div class="b-field">
+                <label>Service type</label>
+                <select id="booking-service" onchange="updatePrice()">
+                  ${services.map(s => `<option value="${rate}">${s} — Ksh ${rate}</option>`).join("")}
+                </select>
+              </div>
+              <div class="price-box">
+                <div class="price-row"><span class="price-label">Service fee</span><span>Ksh ${rate}</span></div>
+                <div class="price-row"><span class="price-label">Platform fee (10%)</span><span>Ksh ${fee}</span></div>
+                <div class="price-total"><span>Total</span><span id="price-total">Ksh ${total}</span></div>
+              </div>
+              <button class="btn-book" onclick="bookNow(${m.id}, '${m.name}', ${rate})">
+                📅 Book ${m.name.split(" ")[0]} now
+              </button>
+              <p class="contact-notice">🔒 Contact revealed after booking confirmed</p>
+            </div>
+          </div>
+        </div>
+      `;
+
+    } catch (err) {
+      document.getElementById("page-content").innerHTML =
+        `<div class="loading">❌ Could not load profile. <a href="browse.html">Go back</a></div>`;
+    }
+  }
+
+  function updatePrice() {
+    const rate = parseInt(document.getElementById("booking-service").value);
+    const fee = Math.round(rate * 0.1);
+    document.getElementById("price-total").textContent = `Ksh ${rate + fee}`;
+  }
+
+  function bookNow(mamaId, mamaName, rate) {
+    const date = document.getElementById("booking-date").value;
+    if (!date) {
+      alert("Please select a date first");
+      return;
+    }
+    const service = document.getElementById("booking-service").options[
+      document.getElementById("booking-service").selectedIndex
+    ].text.split(" —")[0];
+
+    localStorage.setItem("booking_mama_id", mamaId);
+    localStorage.setItem("booking_mama_name", mamaName);
+    localStorage.setItem("booking_rate", rate);
+    localStorage.setItem("booking_date", date);
+    localStorage.setItem("booking_service", service);
+    window.location.href = "booking.html";
+  }
+
+  loadProfile();
+</script>
+
+
+<!-- Developer credit -->
+<div style="background:#0D2B5E;padding:20px 24px;text-align:center;font-family:Inter,sans-serif;">
+  <div style="font-size:13px;color:rgba(255,255,255,.5);margin-bottom:4px;">Designed &amp; built with ❤️ by</div>
+  <div style="font-size:16px;font-weight:600;color:#9FE1CB;letter-spacing:0.5px;">Eyezaw Kahiga</div>
+  <div style="font-size:12px;color:rgba(255,255,255,.35);margin-top:4px;">© 2026 MamaFua · All rights reserved</div>
+</div>
+</body>
+</html>

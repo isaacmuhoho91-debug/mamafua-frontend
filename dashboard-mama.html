@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MamaFua — Mama Fua Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', sans-serif; background: #F2FAF7; min-height: 100vh; }
+    :root {
+      --green-dark: #054D3A; --green: #0F6E56; --green-light: #9FE1CB;
+      --green-bg: #E8F5E9; --green-off: #F2FAF7;
+      --white: #ffffff; --text: #1a1a2e; --muted: #5a6a85;
+      --border: #C5DDD5; --blue: #1565C0; --sky: #E3F2FD;
+      --amber: #F9A825; --red: #C62828; --red-bg: #FFEBEE;
+      --orange: #E65100; --orange-bg: #FFF3E0;
+      --navy: #0D2B5E; --radius: 14px; --shadow: 0 4px 24px rgba(5,77,58,0.10);
+    }
+    nav { background: var(--green-dark); padding: 0 24px; height: 62px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 12px rgba(5,77,58,.3); }
+    .nav-brand { font-family: 'Playfair Display', serif; font-size: 22px; color: #fff; text-decoration: none; }
+    .nav-right { display: flex; align-items: center; gap: 12px; }
+    .online-toggle { display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,.1); border-radius: 20px; padding: 6px 14px; cursor: pointer; font-size: 12px; color: #fff; font-weight: 500; border: none; font-family: 'Inter', sans-serif; }
+    .online-dot { width: 8px; height: 8px; border-radius: 50%; background: #4CAF50; }
+    .nav-user { background: var(--green); color: #fff; width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; }
+    .logout-btn { background: none; border: 1px solid rgba(255,255,255,.3); color: var(--green-light); padding: 6px 14px; border-radius: 20px; font-size: 13px; cursor: pointer; font-family: 'Inter', sans-serif; }
+    .tabs { background: var(--white); border-bottom: 1px solid var(--border); padding: 0 24px; display: flex; gap: 4px; }
+    .tab { padding: 14px 16px; font-size: 13px; color: var(--muted); cursor: pointer; border-bottom: 2px solid transparent; transition: all .15s; border: none; background: none; font-family: 'Inter', sans-serif; }
+    .tab.active { color: var(--green); border-bottom-color: var(--green); font-weight: 600; }
+    .page { max-width: 900px; margin: 0 auto; padding: 28px 24px; }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+    .welcome { background: linear-gradient(135deg, var(--green-dark), var(--green)); border-radius: var(--radius); padding: 24px 28px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; flex-wrap: wrap; gap: 14px; }
+    .welcome h2 { font-family: 'Playfair Display', serif; font-size: 22px; color: #fff; margin-bottom: 4px; }
+    .welcome p { font-size: 14px; color: rgba(255,255,255,.75); }
+    .btn-white { background: #fff; color: var(--green-dark); border: none; padding: 10px 20px; border-radius: 24px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; text-decoration: none; white-space: nowrap; }
+    .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 14px; margin-bottom: 24px; }
+    .stat-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; }
+    .stat-icon { font-size: 22px; margin-bottom: 8px; }
+    .stat-num { font-family: 'Playfair Display', serif; font-size: 28px; color: var(--text); }
+    .stat-label { font-size: 12px; color: var(--muted); margin-top: 4px; }
+    .card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; margin-bottom: 20px; }
+    .card-header { padding: 16px 20px; border-bottom: 1px solid var(--border); font-size: 14px; font-weight: 600; color: var(--text); display: flex; align-items: center; justify-content: space-between; }
+    .card-body { padding: 20px; }
+    .booking-row { display: flex; align-items: flex-start; gap: 12px; padding: 14px 0; border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+    .booking-row:last-child { border-bottom: none; }
+    .bk-av { width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; color: #fff; flex-shrink: 0; background: linear-gradient(135deg,#1565C0,#0D2B5E); }
+    .bk-info { flex: 1; min-width: 0; }
+    .bk-name { font-size: 14px; font-weight: 600; color: var(--text); }
+    .bk-meta { font-size: 12px; color: var(--muted); margin-top: 3px; line-height: 1.6; }
+    .bk-right { text-align: right; flex-shrink: 0; }
+    .bk-amount { font-size: 14px; font-weight: 700; color: var(--green-dark); }
+    .status-pill { font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 12px; display: inline-block; margin-top: 4px; }
+    .s-pending   { background: var(--orange-bg); color: var(--orange); }
+    .s-confirmed { background: var(--sky); color: var(--navy); }
+    .s-completed { background: var(--green-bg); color: var(--green); }
+    .s-cancelled { background: var(--red-bg); color: var(--red); }
+    .bk-actions { display: flex; gap: 6px; margin-top: 8px; }
+    .btn-accept { background: var(--green); color: #fff; border: none; padding: 6px 14px; border-radius: 10px; font-size: 12px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; }
+    .btn-decline { background: var(--white); color: var(--red); border: 1px solid var(--red); padding: 6px 14px; border-radius: 10px; font-size: 12px; cursor: pointer; font-family: 'Inter', sans-serif; }
+    .btn-complete { background: var(--blue); color: #fff; border: none; padding: 6px 14px; border-radius: 10px; font-size: 12px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; }
+    .btn-sm { font-size: 11px; padding: 4px 10px; border-radius: 10px; border: 1px solid var(--border); background: var(--white); color: var(--muted); cursor: pointer; font-family: 'Inter', sans-serif; }
+    .earn-card { background: linear-gradient(135deg, var(--green-dark), var(--green)); border-radius: var(--radius); padding: 22px; margin-bottom: 20px; }
+    .earn-label { font-size: 11px; font-weight: 700; color: var(--green-light); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+    .earn-amount { font-family: 'Playfair Display', serif; font-size: 40px; color: #fff; margin-bottom: 4px; }
+    .earn-sub { font-size: 13px; color: rgba(255,255,255,.65); margin-bottom: 16px; }
+    .earn-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; }
+    .earn-item { background: rgba(255,255,255,.1); border-radius: 10px; padding: 12px; text-align: center; }
+    .earn-item-num { font-size: 18px; font-weight: 700; color: #fff; }
+    .earn-item-label { font-size: 11px; color: rgba(255,255,255,.65); margin-top: 2px; }
+    .empty-state { text-align: center; padding: 40px 20px; color: var(--muted); }
+    .empty-icon { font-size: 40px; margin-bottom: 10px; }
+    .empty-title { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+    .loading { text-align: center; padding: 40px; color: var(--muted); }
+    .filter-pills { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+    .filter-pill { padding: 6px 14px; border-radius: 20px; border: 1.5px solid var(--border); background: var(--white); font-size: 12px; color: var(--muted); cursor: pointer; transition: all .15s; }
+    .filter-pill.active { background: var(--green); color: #fff; border-color: var(--green); }
+    .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px); background: var(--green-dark); color: #fff; padding: 11px 22px; border-radius: 24px; font-size: 14px; font-weight: 500; z-index: 999; transition: transform .3s; white-space: nowrap; }
+    .toast.show { transform: translateX(-50%) translateY(0); }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="#" class="nav-brand">MamaFua</a>
+  <div class="nav-right">
+    <button class="online-toggle" id="online-btn" onclick="toggleOnline()">
+      <div class="online-dot" id="online-dot"></div>
+      <span id="online-label">Online</span>
+    </button>
+    <div class="nav-user" id="nav-user">GW</div>
+    <button class="logout-btn" onclick="logout()">Log out</button>
+  </div>
+</nav>
+
+<div class="tabs">
+  <button class="tab active" onclick="switchTab('overview')">Overview</button>
+  <button class="tab" onclick="switchTab('bookings')">Bookings</button>
+  <button class="tab" onclick="switchTab('earnings')">Earnings</button>
+  <button class="tab" onclick="switchTab('notifications')">Notifications</button>
+</div>
+
+<div class="page">
+
+  <!-- OVERVIEW -->
+  <div class="tab-content active" id="tab-overview">
+    <div class="welcome">
+      <div>
+        <h2 id="welcome-name">Good morning 👋</h2>
+        <p>Here is your MamaFua activity summary</p>
+      </div>
+      <a href="#" class="btn-white" onclick="switchTab('bookings')">View bookings →</a>
+    </div>
+
+    <div class="stat-grid">
+      <div class="stat-card">
+        <div class="stat-icon">💰</div>
+        <div class="stat-num" id="stat-earned">0</div>
+        <div class="stat-label">Total earned (Ksh)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">✅</div>
+        <div class="stat-num" id="stat-jobs">0</div>
+        <div class="stat-label">Jobs completed</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">📥</div>
+        <div class="stat-num" id="stat-pending">0</div>
+        <div class="stat-label">Pending requests</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">⭐</div>
+        <div class="stat-num" id="stat-rating">—</div>
+        <div class="stat-label">Your rating</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        📥 Recent booking requests
+        <button class="btn-sm" onclick="switchTab('bookings')">See all</button>
+      </div>
+      <div class="card-body" id="recent-bookings">
+        <div class="loading">Loading...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOOKINGS -->
+  <div class="tab-content" id="tab-bookings">
+    <h2 style="font-family:'Playfair Display',serif;font-size:22px;margin-bottom:20px;">My bookings</h2>
+
+    <div class="filter-pills">
+      <div class="filter-pill active" onclick="filterBookings('all', this)">All</div>
+      <div class="filter-pill" onclick="filterBookings('pending', this)">Pending</div>
+      <div class="filter-pill" onclick="filterBookings('confirmed', this)">Confirmed</div>
+      <div class="filter-pill" onclick="filterBookings('completed', this)">Completed</div>
+    </div>
+
+    <div class="card">
+      <div class="card-body" id="all-bookings">
+        <div class="loading">Loading bookings...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EARNINGS -->
+  <div class="tab-content" id="tab-earnings">
+    <h2 style="font-family:'Playfair Display',serif;font-size:22px;margin-bottom:20px;">Earnings</h2>
+    <div class="earn-card">
+      <div class="earn-label">💰 Total earned (after fees)</div>
+      <div class="earn-amount" id="earn-total">Ksh 0</div>
+      <div class="earn-sub">Based on all completed jobs</div>
+      <div class="earn-grid">
+        <div class="earn-item">
+          <div class="earn-item-num" id="earn-gross">Ksh 0</div>
+          <div class="earn-item-label">Gross earned</div>
+        </div>
+        <div class="earn-item">
+          <div class="earn-item-num" id="earn-fee">Ksh 0</div>
+          <div class="earn-item-label">Platform fee</div>
+        </div>
+        <div class="earn-item">
+          <div class="earn-item-num" id="earn-jobs">0</div>
+          <div class="earn-item-label">Jobs done</div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">📜 Payment history</div>
+      <div class="card-body" id="payment-history">
+        <div class="loading">Loading...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NOTIFICATIONS -->
+  <div class="tab-content" id="tab-notifications">
+    <h2 style="font-family:'Playfair Display',serif;font-size:22px;margin-bottom:20px;">Notifications</h2>
+    <div class="card">
+      <div class="card-body" id="notifications-list">
+        <div class="loading">Loading...</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  const API = "https://mamafua-backend.onrender.com";
+  const user = JSON.parse(localStorage.getItem("mamafua_user") || "{}");
+  let allBookings = [];
+  let isOnline = true;
+
+  // Redirect if not logged in or not mama fua
+  if (!user.id) window.location.href = "login.html";
+
+  // Set user info
+  if (user.first_name) {
+    const initials = user.first_name[0] + (user.last_name ? user.last_name[0] : "");
+    document.getElementById("nav-user").textContent = initials;
+    document.getElementById("welcome-name").textContent =
+      `Good morning, ${user.first_name} 👋`;
+  }
+
+  // Switch tabs
+  function switchTab(tab) {
+    document.querySelectorAll(".tab-content").forEach(t => t.classList.remove("active"));
+    document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+    document.getElementById("tab-" + tab).classList.add("active");
+    const tabs = ["overview","bookings","earnings","notifications"];
+    document.querySelectorAll(".tab")[tabs.indexOf(tab)]?.classList.add("active");
+    if (tab === "notifications") loadNotifications();
+    if (tab === "earnings") loadEarnings();
+  }
+
+  // Load bookings
+  async function loadBookings() {
+    try {
+      // Get mama profile id — profile id is 1 for Grace
+      // We get it by finding the profile linked to this user
+      const profileRes = await fetch(`${API}/api/mamas/`);
+      const profileData = await profileRes.json();
+      const myProfile = profileData.mamas.find(m => m.user_id === user.id);
+
+      // If not verified yet show all mamas and find by user_id
+      let mamaId = myProfile?.id;
+
+      // If profile not found in verified list try fetching directly
+      if (!mamaId) {
+        // Try profile id 1 as fallback
+        mamaId = 1;
+      }
+
+      const res = await fetch(`${API}/api/bookings/mama/${mamaId}`);
+      const data = await res.json();
+      allBookings = data.bookings || [];
+
+      // Update stats
+      const completed = allBookings.filter(b => b.status === "completed");
+      const pending   = allBookings.filter(b => b.status === "pending");
+      const grossEarned = completed.reduce((sum, b) => sum + b.amount, 0);
+
+      document.getElementById("stat-earned").textContent  = (grossEarned * 0.9).toFixed(0);
+      document.getElementById("stat-jobs").textContent    = completed.length;
+      document.getElementById("stat-pending").textContent = pending.length;
+      document.getElementById("stat-rating").textContent  = myProfile?.rating || "New";
+
+      // Recent bookings
+      document.getElementById("recent-bookings").innerHTML =
+        allBookings.length ? renderRows(allBookings.slice(0, 3)) :
+        `<div class="empty-state">
+          <div class="empty-icon">📭</div>
+          <div class="empty-title">No bookings yet</div>
+          <p>Once clients book you, their requests will appear here</p>
+        </div>`;
+
+      // All bookings
+      document.getElementById("all-bookings").innerHTML =
+        allBookings.length ? renderRows(allBookings) :
+        `<div class="empty-state">
+          <div class="empty-icon">📭</div>
+          <div class="empty-title">No bookings yet</div>
+        </div>`;
+
+    } catch (err) {
+      document.getElementById("recent-bookings").innerHTML =
+        `<div class="loading">❌ Could not load bookings</div>`;
+    }
+  }
+
+  function renderRows(bookings) {
+    return bookings.map(b => {
+      const initials = b.client_name.split(" ").map(n => n[0]).join("").toUpperCase();
+      const statusClass = {
+        pending: "s-pending", confirmed: "s-confirmed",
+        completed: "s-completed", cancelled: "s-cancelled"
+      }[b.status] || "s-pending";
+
+      const statusLabel = {
+        pending: "New request", confirmed: "Confirmed",
+        completed: "Completed ✓", cancelled: "Cancelled"
+      }[b.status] || b.status;
+
+      let actions = "";
+      if (b.status === "pending") {
+        actions = `
+          <button class="btn-accept" onclick="acceptBooking(${b.id})">✓ Accept</button>
+          <button class="btn-decline" onclick="declineBooking(${b.id})">✗ Decline</button>`;
+      } else if (b.status === "confirmed") {
+        actions = `
+          <button class="btn-complete" onclick="completeBooking(${b.id})">✓ Mark complete</button>`;
+      }
+
+      return `
+        <div class="booking-row" id="booking-${b.id}">
+          <div class="bk-av">${initials}</div>
+          <div class="bk-info">
+            <div class="bk-name">${b.client_name}</div>
+            <div class="bk-meta">
+              📅 ${b.date} · ⏰ ${b.time}<br>
+              🧺 ${b.service_type} · 📍 ${b.location}
+            </div>
+            <div class="bk-actions">${actions}</div>
+          </div>
+          <div class="bk-right">
+            <div class="bk-amount">Ksh ${b.amount}</div>
+            <div class="status-pill ${statusClass}">${statusLabel}</div>
+          </div>
+        </div>`;
+    }).join("");
+  }
+
+  function filterBookings(status, el) {
+    document.querySelectorAll(".filter-pill").forEach(p => p.classList.remove("active"));
+    el.classList.add("active");
+    const filtered = status === "all"
+      ? allBookings
+      : allBookings.filter(b => b.status === status);
+    document.getElementById("all-bookings").innerHTML =
+      filtered.length ? renderRows(filtered) :
+      `<div class="empty-state">
+        <div class="empty-icon">📭</div>
+        <div class="empty-title">No ${status} bookings</div>
+      </div>`;
+  }
+
+  async function acceptBooking(id) {
+    try {
+      const res = await fetch(`${API}/api/bookings/${id}/accept`, { method: "PUT" });
+      const data = await res.json();
+      if (res.ok) {
+        showToast("✅ Booking accepted!");
+        loadBookings();
+      }
+    } catch (err) {
+      showToast("❌ Could not accept booking");
+    }
+  }
+
+  async function declineBooking(id) {
+    try {
+      const res = await fetch(`${API}/api/bookings/${id}/decline`, { method: "PUT" });
+      if (res.ok) {
+        showToast("Booking declined");
+        loadBookings();
+      }
+    } catch (err) {
+      showToast("❌ Could not decline booking");
+    }
+  }
+
+  async function completeBooking(id) {
+    try {
+      const res = await fetch(`${API}/api/bookings/${id}/complete`, { method: "PUT" });
+      if (res.ok) {
+        showToast("🎉 Job marked as complete!");
+        loadBookings();
+      }
+    } catch (err) {
+      showToast("❌ Could not complete booking");
+    }
+  }
+
+  function loadEarnings() {
+    const completed = allBookings.filter(b => b.status === "completed");
+    const gross = completed.reduce((sum, b) => sum + b.amount, 0);
+    const fee   = Math.round(gross * 0.1);
+    const net   = gross - fee;
+
+    document.getElementById("earn-total").textContent = `Ksh ${net}`;
+    document.getElementById("earn-gross").textContent = `Ksh ${gross}`;
+    document.getElementById("earn-fee").textContent   = `Ksh ${fee}`;
+    document.getElementById("earn-jobs").textContent  = completed.length;
+
+    document.getElementById("payment-history").innerHTML =
+      completed.length ? completed.map(b => `
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);font-size:13px;">
+          <div>
+            <div style="font-weight:600;color:var(--text);">${b.client_name}</div>
+            <div style="color:var(--muted);font-size:12px;">${b.date} · ${b.service_type}</div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-weight:700;color:var(--green-dark);">Ksh ${Math.round(b.amount * 0.9)}</div>
+            <div style="font-size:11px;color:var(--green);">Paid ✓</div>
+          </div>
+        </div>`).join("") :
+      `<div class="empty-state">
+        <div class="empty-icon">💰</div>
+        <div class="empty-title">No payments yet</div>
+      </div>`;
+  }
+
+  async function loadNotifications() {
+    try {
+      const res = await fetch(`${API}/api/bookings/notifications/${user.id}`);
+      const data = await res.json();
+      const notifs = data.notifications || [];
+      document.getElementById("notifications-list").innerHTML =
+        notifs.length ? notifs.map(n => `
+          <div style="padding:13px 0;border-bottom:1px solid var(--border);display:flex;gap:12px;align-items:flex-start;">
+            <div style="width:8px;height:8px;border-radius:50%;background:${n.is_read ? "var(--border)" : "var(--green)"};flex-shrink:0;margin-top:5px;"></div>
+            <div>
+              <div style="font-size:13px;color:var(--text);line-height:1.6;">${n.message}</div>
+              <div style="font-size:11px;color:var(--muted);margin-top:3px;">${new Date(n.created_at).toLocaleString()}</div>
+            </div>
+          </div>`).join("") :
+        `<div class="empty-state">
+          <div class="empty-icon">🔔</div>
+          <div class="empty-title">No notifications yet</div>
+        </div>`;
+    } catch (err) {
+      document.getElementById("notifications-list").innerHTML =
+        `<div class="loading">❌ Could not load notifications</div>`;
+    }
+  }
+
+  function toggleOnline() {
+    isOnline = !isOnline;
+    document.getElementById("online-dot").style.background = isOnline ? "#4CAF50" : "#9E9E9E";
+    document.getElementById("online-label").textContent = isOnline ? "Online" : "Offline";
+    showToast(isOnline ? "🟢 You are now visible to clients" : "⚫ You are now hidden from clients");
+  }
+
+  function logout() {
+    localStorage.removeItem("mamafua_token");
+    localStorage.removeItem("mamafua_user");
+    window.location.href = "login.html";
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById("toast");
+    t.textContent = msg;
+    t.classList.add("show");
+    setTimeout(() => t.classList.remove("show"), 2800);
+  }
+
+  loadBookings();
+</script>
+
+
+<!-- Developer credit -->
+<div style="background:#0D2B5E;padding:20px 24px;text-align:center;font-family:Inter,sans-serif;">
+  <div style="font-size:13px;color:rgba(255,255,255,.5);margin-bottom:4px;">Designed &amp; built with ❤️ by</div>
+  <div style="font-size:16px;font-weight:600;color:#9FE1CB;letter-spacing:0.5px;">Eyezaw Kahiga</div>
+  <div style="font-size:12px;color:rgba(255,255,255,.35);margin-top:4px;">© 2026 MamaFua · All rights reserved</div>
+</div>
+</body>
+</html>

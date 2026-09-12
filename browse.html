@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MamaFua — Find a mama fua</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', sans-serif; background: #F5F8FF; min-height: 100vh; }
+    :root {
+      --navy: #0D2B5E; --blue: #1565C0; --sky: #E3F2FD; --sky-dk: #BBDEFB;
+      --white: #ffffff; --off: #F5F8FF; --text: #1a1a2e; --muted: #5a6a85;
+      --border: #D0DFF5; --green: #0F6E56; --green-bg: #E8F5E9; --amber: #F9A825;
+      --radius: 14px; --shadow: 0 4px 24px rgba(13,43,94,0.10);
+    }
+    nav {
+      background: var(--navy); padding: 0 24px; height: 62px;
+      display: flex; align-items: center; justify-content: space-between;
+      position: sticky; top: 0; z-index: 100;
+    }
+    .nav-brand { font-family: 'Playfair Display', serif; font-size: 22px; color: #fff; text-decoration: none; }
+    .nav-search-wrap { flex: 1; max-width: 400px; margin: 0 24px; }
+    .nav-search {
+      width: 100%; background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.2);
+      border-radius: 24px; padding: 8px 16px; color: #fff; font-size: 14px;
+      font-family: 'Inter', sans-serif; outline: none;
+    }
+    .nav-search::placeholder { color: rgba(255,255,255,.5); }
+    .nav-right { display: flex; align-items: center; gap: 14px; }
+    .nav-right a { color: var(--sky-dk); font-size: 13px; text-decoration: none; }
+    .nav-user {
+      background: var(--blue); color: #fff; width: 34px; height: 34px;
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 600; cursor: pointer;
+    }
+    .hero {
+      background: linear-gradient(135deg, var(--navy), var(--blue));
+      padding: 40px 24px; text-align: center;
+    }
+    .hero h1 { font-family: 'Playfair Display', serif; font-size: 32px; color: #fff; margin-bottom: 8px; }
+    .hero p { color: var(--sky-dk); font-size: 15px; margin-bottom: 24px; }
+    .search-bar {
+      display: flex; gap: 10px; max-width: 600px; margin: 0 auto;
+      flex-wrap: wrap; justify-content: center;
+    }
+    .search-input {
+      flex: 1; min-width: 200px; padding: 12px 16px; border-radius: 10px;
+      border: none; font-size: 14px; font-family: 'Inter', sans-serif; outline: none;
+    }
+    .search-btn {
+      background: #fff; color: var(--navy); border: none; padding: 12px 24px;
+      border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer;
+      font-family: 'Inter', sans-serif;
+    }
+    .content { max-width: 1100px; margin: 0 auto; padding: 28px 24px; }
+    .filters { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+    .filter-pill {
+      padding: 7px 16px; border-radius: 20px; border: 1.5px solid var(--border);
+      background: var(--white); font-size: 13px; color: var(--muted);
+      cursor: pointer; transition: all .15s;
+    }
+    .filter-pill.active { background: var(--blue); color: #fff; border-color: var(--blue); }
+    .results-bar {
+      display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;
+    }
+    .results-count { font-size: 13px; color: var(--muted); }
+    .sort-select {
+      font-size: 13px; padding: 7px 12px; border: 1.5px solid var(--border);
+      border-radius: 8px; background: var(--white); color: var(--text);
+      font-family: 'Inter', sans-serif; cursor: pointer; outline: none;
+    }
+    .cards-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px;
+    }
+    .mama-card {
+      background: var(--white); border: 1px solid var(--border);
+      border-radius: var(--radius); overflow: hidden;
+      transition: box-shadow .2s, transform .2s;
+    }
+    .mama-card:hover { box-shadow: var(--shadow); transform: translateY(-3px); }
+    .card-top { padding: 18px; display: flex; gap: 14px; align-items: flex-start; }
+    .av {
+      width: 52px; height: 52px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; font-weight: 700; color: #fff; flex-shrink: 0;
+    }
+    .card-name { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 3px; }
+    .badge-v {
+      background: var(--green-bg); color: var(--green); font-size: 10px;
+      font-weight: 600; padding: 2px 8px; border-radius: 10px; margin-left: 4px;
+    }
+    .card-stars { font-size: 12px; color: var(--muted); margin-bottom: 3px; }
+    .star { color: var(--amber); }
+    .card-meta { font-size: 12px; color: var(--muted); }
+    .card-tags { padding: 0 18px 12px; display: flex; gap: 6px; flex-wrap: wrap; }
+    .tag { background: var(--sky); color: var(--navy); font-size: 11px; padding: 3px 10px; border-radius: 12px; }
+    .card-bottom {
+      padding: 12px 18px; border-top: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .card-rate { font-size: 15px; font-weight: 700; color: var(--navy); }
+    .card-rate span { font-size: 12px; font-weight: 400; color: var(--muted); }
+    .btn-view {
+      background: var(--blue); color: #fff; border: none; padding: 8px 18px;
+      border-radius: 20px; font-size: 13px; font-weight: 600; cursor: pointer;
+      font-family: 'Inter', sans-serif; transition: background .15s;
+    }
+    .btn-view:hover { background: var(--navy); }
+    .empty-state { text-align: center; padding: 60px 20px; color: var(--muted); }
+    .empty-icon { font-size: 48px; margin-bottom: 12px; }
+    .empty-title { font-size: 16px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+    .loading { text-align: center; padding: 60px; color: var(--muted); font-size: 15px; }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-brand">MamaFua</a>
+  <div class="nav-search-wrap">
+    <input class="nav-search" type="text" placeholder="Search by name or area..."
+      oninput="searchMamas(this.value)"/>
+  </div>
+  <div class="nav-right">
+    <a href="dashboard-client.html">My bookings</a>
+    <div class="nav-user" id="nav-user">?</div>
+  </div>
+</nav>
+
+<div class="hero">
+  <h1>Find a mama fua near you</h1>
+  <p>Browse verified mama fuas in your area and book in minutes</p>
+  <div class="search-bar">
+    <input class="search-input" type="text" id="location-search"
+      placeholder="Enter your estate e.g. Kilimani"/>
+    <button class="search-btn" onclick="loadMamas()">🔍 Search</button>
+  </div>
+</div>
+
+<div class="content">
+  <div class="filters">
+    <div class="filter-pill active" onclick="filterBy('all', this)">All</div>
+    <div class="filter-pill" onclick="filterBy('available', this)">Available today</div>
+    <div class="filter-pill" onclick="filterBy('top', this)">Top rated</div>
+    <div class="filter-pill" onclick="filterBy('cheap', this)">Under Ksh 400</div>
+    <div class="filter-pill" onclick="filterBy('verified', this)">Verified only</div>
+  </div>
+
+  <div class="results-bar">
+    <span class="results-count" id="results-count">Loading mama fuas...</span>
+    <select class="sort-select" onchange="sortMamas(this.value)">
+      <option value="rating">Top rated</option>
+      <option value="price-low">Price: low to high</option>
+      <option value="price-high">Price: high to low</option>
+      <option value="jobs">Most jobs done</option>
+    </select>
+  </div>
+
+  <div id="cards-container">
+    <div class="loading">🔍 Finding mama fuas near you...</div>
+  </div>
+</div>
+
+<script>
+  const API = "https://mamafua-backend.onrender.com";
+  let allMamas = [];
+  let filtered = [];
+
+  const colors = [
+    "linear-gradient(135deg,#1565C0,#0D2B5E)",
+    "linear-gradient(135deg,#0F6E56,#054D3A)",
+    "linear-gradient(135deg,#7B1FA2,#4A148C)",
+    "linear-gradient(135deg,#E65100,#BF360C)",
+    "linear-gradient(135deg,#37474F,#263238)"
+  ];
+
+  // Show user initials in nav
+  const user = JSON.parse(localStorage.getItem("mamafua_user") || "{}");
+  if (user.first_name) {
+    document.getElementById("nav-user").textContent =
+      user.first_name[0] + (user.last_name ? user.last_name[0] : "");
+  }
+
+  async function loadMamas() {
+    const location = document.getElementById("location-search").value.trim();
+    let url = `${API}/api/mamas/`;
+    if (location) url += `?location=${encodeURIComponent(location)}`;
+
+    try {
+      const response = await fetch(url);
+      const data = await response.json();
+      allMamas = data.mamas || [];
+      filtered = [...allMamas];
+      renderCards();
+    } catch (error) {
+      document.getElementById("cards-container").innerHTML = `
+        <div class="empty-state">
+          <div class="empty-icon">⚠️</div>
+          <div class="empty-title">Cannot connect to server</div>
+          <p>Make sure the backend is running on port 8000</p>
+        </div>`;
+    }
+  }
+
+  function viewProfile(id) {
+    console.log("Viewing profile ID:", id);
+    localStorage.setItem("selected_mama_id", id);
+    window.location.href = "profile.html";
+  }
+
+  function renderCards() {
+    const container = document.getElementById("cards-container");
+    document.getElementById("results-count").textContent =
+      `Showing ${filtered.length} mama fua${filtered.length !== 1 ? "s" : ""}`;
+
+    if (filtered.length === 0) {
+      container.innerHTML = `
+        <div class="empty-state">
+          <div class="empty-icon">🔍</div>
+          <div class="empty-title">No mama fuas found</div>
+          <p>Try a different area or remove some filters</p>
+        </div>`;
+      return;
+    }
+
+    container.innerHTML = `<div class="cards-grid">
+      ${filtered.map((m, i) => {
+        const initials = m.name.split(" ").map(n => n[0]).join("").toUpperCase();
+        const color = colors[i % colors.length];
+        const stars = "★".repeat(Math.floor(m.rating || 0));
+        const services = (m.services || "").split(",").slice(0, 3);
+        const tags = services.map(s => `<div class="tag">${s.trim()}</div>`).join("");
+        return `
+          <div class="mama-card">
+            <div class="card-top">
+              <div class="av" style="background:${color}">${initials}</div>
+              <div>
+                <div class="card-name">
+                  ${m.name}
+                  ${m.is_verified ? '<span class="badge-v">✓ Verified</span>' : ""}
+                </div>
+                <div class="card-stars">
+                  <span class="star">${stars || "☆☆☆☆☆"}</span>
+                  ${m.rating ? m.rating + " · " : ""}${m.total_jobs} jobs
+                </div>
+                <div class="card-meta">
+                  📍 ${m.areas_covered || "Nairobi"} ·
+                  ${m.is_online ? "🟢 Online" : "⚫ Offline"}
+                </div>
+              </div>
+            </div>
+            <div class="card-tags">${tags}</div>
+            <div class="card-bottom">
+              <div class="card-rate">Ksh ${m.rate}<span>/day</span></div>
+              <button class="btn-view" onclick="viewProfile(${m.id})">
+                View profile →
+              </button>
+            </div>
+          </div>`;
+      }).join("")}
+    </div>`;
+  }
+
+  function searchMamas(query) {
+    filtered = allMamas.filter(m =>
+      m.name.toLowerCase().includes(query.toLowerCase()) ||
+      (m.areas_covered || "").toLowerCase().includes(query.toLowerCase()) ||
+      (m.services || "").toLowerCase().includes(query.toLowerCase())
+    );
+    renderCards();
+  }
+
+  function filterBy(type, el) {
+    document.querySelectorAll(".filter-pill").forEach(p => p.classList.remove("active"));
+    el.classList.add("active");
+    if (type === "all")      filtered = [...allMamas];
+    else if (type === "top") filtered = allMamas.filter(m => m.rating >= 4.5);
+    else if (type === "cheap") filtered = allMamas.filter(m => m.rate < 400);
+    else if (type === "verified") filtered = allMamas.filter(m => m.is_verified);
+    else if (type === "available") filtered = allMamas.filter(m => m.is_online);
+    renderCards();
+  }
+
+  function sortMamas(by) {
+    if (by === "rating")     filtered.sort((a, b) => (b.rating||0) - (a.rating||0));
+    if (by === "price-low")  filtered.sort((a, b) => a.rate - b.rate);
+    if (by === "price-high") filtered.sort((a, b) => b.rate - a.rate);
+    if (by === "jobs")       filtered.sort((a, b) => b.total_jobs - a.total_jobs);
+    renderCards();
+  }
+
+  // Load on page start
+  loadMamas();
+</script>
+
+
+<!-- Developer credit -->
+<div style="background:#0D2B5E;padding:20px 24px;text-align:center;font-family:Inter,sans-serif;">
+  <div style="font-size:13px;color:rgba(255,255,255,.5);margin-bottom:4px;">Designed &amp; built with ❤️ by</div>
+  <div style="font-size:16px;font-weight:600;color:#9FE1CB;letter-spacing:0.5px;">Eyezaw Kahiga</div>
+  <div style="font-size:12px;color:rgba(255,255,255,.35);margin-top:4px;">© 2026 MamaFua · All rights reserved</div>
+</div>
+</body>
+</html>

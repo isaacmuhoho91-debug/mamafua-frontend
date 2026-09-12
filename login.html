@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MamaFua — Log in</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', sans-serif; background: #F5F8FF; min-height: 100vh; display: flex; flex-direction: column; }
+    :root {
+      --navy: #0D2B5E; --blue: #1565C0; --sky: #E3F2FD;
+      --white: #ffffff; --text: #1a1a2e; --muted: #5a6a85;
+      --border: #D0DFF5; --green: #0F6E56; --green-bg: #E8F5E9;
+      --red: #C62828; --red-bg: #FFEBEE;
+    }
+    nav { background: var(--navy); padding: 0 24px; height: 62px; display: flex; align-items: center; justify-content: space-between; }
+    .nav-brand { font-family: 'Playfair Display', serif; font-size: 22px; color: #fff; text-decoration: none; }
+    .nav-right a { color: #BBDEFB; font-size: 13px; text-decoration: none; }
+    .page { flex: 1; display: flex; align-items: center; justify-content: center; padding: 40px 24px; }
+    .card { background: var(--white); border-radius: 20px; box-shadow: 0 4px 32px rgba(13,43,94,0.10); padding: 40px 36px; width: 100%; max-width: 420px; }
+    .card-title { font-family: 'Playfair Display', serif; font-size: 26px; color: var(--text); margin-bottom: 6px; }
+    .card-sub { font-size: 13px; color: var(--muted); margin-bottom: 28px; }
+    .field { margin-bottom: 16px; }
+    .field label { display: block; font-size: 13px; font-weight: 500; color: var(--text); margin-bottom: 5px; }
+    .field input { width: 100%; padding: 11px 14px; border: 1.5px solid var(--border); border-radius: 10px; font-size: 14px; font-family: 'Inter', sans-serif; color: var(--text); outline: none; transition: border-color .15s; }
+    .field input:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(21,101,192,.1); }
+    .btn-submit { width: 100%; background: var(--blue); color: #fff; border: none; padding: 13px; border-radius: 32px; font-size: 15px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; margin-top: 8px; transition: background .15s; }
+    .btn-submit:hover { background: var(--navy); }
+    .btn-submit:disabled { background: #9fb8de; cursor: not-allowed; }
+    .divider { text-align: center; font-size: 13px; color: var(--muted); margin: 16px 0; }
+    .btn-mama { width: 100%; background: #0F6E56; color: #fff; border: none; padding: 13px; border-radius: 32px; font-size: 15px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; transition: background .15s; }
+    .btn-mama:hover { background: #054D3A; }
+    .signup-link { text-align: center; font-size: 13px; color: var(--muted); margin-top: 16px; }
+    .signup-link a { color: var(--blue); font-weight: 600; text-decoration: none; }
+    .alert { padding: 12px 16px; border-radius: 10px; font-size: 13px; margin-bottom: 16px; display: none; }
+    .alert-error { background: var(--red-bg); color: var(--red); border: 1px solid #FFCDD2; }
+    .alert-success { background: var(--green-bg); color: var(--green); border: 1px solid #A5D6A7; }
+    .alert.show { display: block; }
+    .role-tabs { display: flex; gap: 8px; margin-bottom: 24px; }
+    .role-tab { flex: 1; padding: 10px; border: 1.5px solid var(--border); border-radius: 10px; text-align: center; cursor: pointer; font-size: 13px; font-weight: 500; color: var(--muted); transition: all .15s; }
+    .role-tab.active { border-color: var(--blue); background: var(--sky); color: var(--navy); font-weight: 600; }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-brand">MamaFua</a>
+  <div class="nav-right">
+    <a href="signup-client.html">Create account</a>
+  </div>
+</nav>
+
+<div class="page">
+  <div class="card">
+    <h2 class="card-title">Welcome back</h2>
+    <p class="card-sub">Log in to your MamaFua account</p>
+
+    <div class="role-tabs">
+      <div class="role-tab active" id="tab-client" onclick="setRole('client')">👤 I am a client</div>
+      <div class="role-tab" id="tab-mama" onclick="setRole('mama')">🧺 I am a mama fua</div>
+    </div>
+
+    <div class="alert alert-error" id="error-msg"></div>
+    <div class="alert alert-success" id="success-msg"></div>
+
+    <div class="field">
+      <label>Email address</label>
+      <input type="email" id="email" placeholder="your@email.com"/>
+    </div>
+
+    <div class="field">
+      <label>Password</label>
+      <input type="password" id="password" placeholder="Your password"
+        onkeydown="if(event.key==='Enter') login()"/>
+    </div>
+
+    <button class="btn-submit" id="submit-btn" onclick="login()">
+      Log in →
+    </button>
+
+    <div class="signup-link" style="margin-top:14px;">
+      Don't have an account?
+      <a href="signup-client.html">Sign up as client</a> or
+      <a href="signup-mama.html">register as mama fua</a>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  const API = "https://mamafua-backend.onrender.com";
+  let selectedRole = "client";
+
+  function setRole(role) {
+    selectedRole = role;
+    document.getElementById("tab-client").classList.toggle("active", role === "client");
+    document.getElementById("tab-mama").classList.toggle("active", role === "mama");
+  }
+
+  async function login() {
+    const btn = document.getElementById("submit-btn");
+    const errorMsg = document.getElementById("error-msg");
+    const successMsg = document.getElementById("success-msg");
+
+    errorMsg.classList.remove("show");
+    successMsg.classList.remove("show");
+
+    const email    = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value;
+
+    if (!email || !password) {
+      errorMsg.textContent = "Please enter your email and password";
+      errorMsg.classList.add("show");
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = "Logging in...";
+
+    try {
+      const response = await fetch(`${API}/api/auth/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password })
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        // Save token and user
+        localStorage.setItem("mamafua_token", data.token);
+        localStorage.setItem("mamafua_user", JSON.stringify(data.user));
+
+        successMsg.textContent = `Welcome back ${data.user.first_name}! Redirecting...`;
+        successMsg.classList.add("show");
+
+        // Redirect based on role
+        setTimeout(() => {
+          if (data.user.role === "mama_fua") {
+            window.location.href = "dashboard-mama.html";
+          } else {
+            window.location.href = "browse.html";
+          }
+        }, 1200);
+
+      } else {
+        errorMsg.textContent = data.detail || "Incorrect email or password";
+        errorMsg.classList.add("show");
+        btn.disabled = false;
+        btn.textContent = "Log in →";
+      }
+
+    } catch (error) {
+      errorMsg.textContent = "Cannot connect to server. Make sure the backend is running.";
+      errorMsg.classList.add("show");
+      btn.disabled = false;
+      btn.textContent = "Log in →";
+    }
+  }
+</script>
+
+
+<!-- Developer credit -->
+<div style="background:#0D2B5E;padding:20px 24px;text-align:center;font-family:Inter,sans-serif;">
+  <div style="font-size:13px;color:rgba(255,255,255,.5);margin-bottom:4px;">Designed &amp; built with ❤️ by</div>
+  <div style="font-size:16px;font-weight:600;color:#9FE1CB;letter-spacing:0.5px;">Eyezaw Kahiga</div>
+  <div style="font-size:12px;color:rgba(255,255,255,.35);margin-top:4px;">© 2026 MamaFua · All rights reserved</div>
+</div>
+</body>
+</html>
