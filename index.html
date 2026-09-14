@@ -7,32 +7,262 @@
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
-    body { font-family: 'Inter', sans-serif; color: #1a1a2e; background: #fff; }
+    body { font-family: 'Inter', sans-serif; background: #F5F8FF; }
     :root {
       --navy: #0D2B5E; --blue: #1565C0; --sky: #E3F2FD; --sky-dk: #BBDEFB;
       --white: #ffffff; --off: #F5F8FF; --text: #1a1a2e; --muted: #5a6a85;
       --border: #D0DFF5; --green: #0F6E56; --green-bg: #E8F5E9; --amber: #F9A825;
-      --radius: 14px; --shadow: 0 4px 24px rgba(13,43,94,0.10);
     }
-    nav {
-      background: var(--navy); padding: 0 24px; height: 66px;
-      display: flex; align-items: center; justify-content: space-between;
-      position: sticky; top: 0; z-index: 100;
-      box-shadow: 0 2px 12px rgba(13,43,94,.3);
-    }
-    .nav-brand { font-family: 'Playfair Display', serif; font-size: 24px; color: #fff; text-decoration: none; }
-    .nav-links { display: flex; align-items: center; gap: 24px; }
-    .nav-links a { color: var(--sky-dk); font-size: 14px; text-decoration: none; transition: color .15s; }
-    .nav-links a:hover { color: #fff; }
-    .nav-cta { background: #fff; color: var(--navy); font-size: 13px; font-weight: 600; padding: 8px 20px; border-radius: 24px; text-decoration: none; transition: opacity .15s; }
-    .nav-cta:hover { opacity: .9; }
-    .hero {
-      background: linear-gradient(135deg, var(--navy) 0%, var(--blue) 100%);
-      padding: 90px 24px 80px; text-align: center;
-    }
-    .hero-eyebrow { display: inline-block; background: rgba(255,255,255,.15); color: var(--sky-dk); font-size: 12px; font-weight: 600; letter-spacing: 1.2px; text-transform: uppercase; padding: 5px 16px; border-radius: 24px; margin-bottom: 22px; }
-    .hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(32px,6vw,56px); color: #fff; line-height: 1.18; margin-bottom: 18px; }
+    nav { background: var(--navy); padding: 0 24px; height: 62px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+    .nav-brand { font-family: 'Playfair Display', serif; font-size: 22px; color: #fff; text-decoration: none; }
+    .nav-links { display: flex; align-items: center; gap: 20px; }
+    .nav-links a { color: var(--sky-dk); font-size: 13px; text-decoration: none; }
+    .nav-cta { background: #fff; color: var(--navy); font-size: 13px; font-weight: 600; padding: 8px 20px; border-radius: 24px; text-decoration: none; }
+    .hero { background: linear-gradient(135deg, var(--navy), var(--blue)); padding: 80px 24px; text-align: center; }
+    .hero-eyebrow { display: inline-block; background: rgba(255,255,255,.15); color: var(--sky-dk); font-size: 12px; font-weight: 600; letter-spacing: 1.2px; text-transform: uppercase; padding: 5px 14px; border-radius: 24px; margin-bottom: 20px; }
+    .hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(32px,5vw,56px); color: #fff; line-height: 1.15; margin-bottom: 18px; }
     .hero h1 em { font-style: italic; color: var(--sky-dk); }
-    .hero p { color: rgba(255,255,255,.75); font-size: 17px; max-width: 520px; margin: 0 auto 36px; line-height: 1.7; }
-    .hero-btns { display: flex; gap: 14px; justify-content: center; flex-wrap:
+    .hero p { color: rgba(255,255,255,.75); font-size: 16px; max-width: 520px; margin: 0 auto 32px; line-height: 1.7; }
+    .hero-btns { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+    .btn-white { background: #fff; color: var(--navy); border: none; padding: 13px 30px; border-radius: 32px; font-size: 15px; font-weight: 600; cursor: pointer; text-decoration: none; transition: opacity .15s; }
+    .btn-white:hover { opacity: .9; }
+    .btn-outline { background: transparent; color: #fff; border: 2px solid rgba(255,255,255,.5); padding: 13px 30px; border-radius: 32px; font-size: 15px; font-weight: 600; text-decoration: none; transition: border-color .15s; }
+    .btn-outline:hover { border-color: #fff; }
+    .stats { background: var(--navy); padding: 28px 24px; border-top: 1px solid rgba(255,255,255,.08); }
+    .stats-inner { max-width: 900px; margin: 0 auto; display: flex; justify-content: space-around; flex-wrap: wrap; gap: 16px; }
+    .stat { text-align: center; }
+    .stat-num { font-family: 'Playfair Display', serif; font-size: 32px; color: #fff; }
+    .stat-lbl { font-size: 13px; color: var(--sky-dk); margin-top: 4px; }
+    section { padding: 72px 24px; }
+    .section-alt { background: var(--off); }
+    .container { max-width: 1000px; margin: 0 auto; }
+    .section-label { font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--blue); display: block; margin-bottom: 10px; text-align: center; }
+    .section-title { font-family: 'Playfair Display', serif; font-size: clamp(24px,3.5vw,36px); color: var(--text); margin-bottom: 10px; text-align: center; }
+    .section-sub { font-size: 15px; color: var(--muted); text-align: center; max-width: 520px; margin: 0 auto 48px; }
+    .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap: 20px; }
+    .step-card { background: #fff; border: 1px solid var(--border); border-radius: 14px; padding: 28px 22px; text-align: center; transition: box-shadow .2s, transform .2s; }
+    .step-card:hover { box-shadow: 0 4px 24px rgba(13,43,94,.1); transform: translateY(-4px); }
+    .step-num { width: 40px; height: 40px; border-radius: 50%; background: var(--blue); color: #fff; font-size: 16px; font-weight: 700; display: flex; align-items: center; justify-content: center; margin: 0 auto 14px; }
+    .step-icon { font-size: 28px; margin-bottom: 12px; }
+    .step-title { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 8px; }
+    .step-desc { font-size: 13px; color: var(--muted); line-height: 1.6; }
+    .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px,1fr)); gap: 20px; }
+    .feat-card { background: #fff; border: 1px solid var(--border); border-radius: 14px; padding: 24px; }
+    .feat-icon { width: 44px; height: 44px; border-radius: 12px; background: var(--sky); display: flex; align-items: center; justify-content: center; font-size: 20px; margin-bottom: 14px; }
+    .feat-title { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 8px; }
+    .feat-desc { font-size: 13px; color: var(--muted); line-height: 1.65; }
+    .reviews { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px,1fr)); gap: 20px; }
+    .review-card { background: #fff; border: 1px solid var(--border); border-radius: 14px; padding: 22px; }
+    .review-stars { color: var(--amber); font-size: 14px; letter-spacing: 2px; margin-bottom: 10px; }
+    .review-text { font-size: 14px; color: var(--text); font-style: italic; line-height: 1.7; margin-bottom: 14px; }
+    .reviewer { display: flex; align-items: center; gap: 10px; }
+    .rev-av { width: 36px; height: 36px; border-radius: 50%; background: var(--blue); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 12px; font-weight: 600; }
+    .rev-name { font-size: 13px; font-weight: 600; color: var(--text); }
+    .rev-role { font-size: 12px; color: var(--muted); }
+    .mama-section { background: linear-gradient(135deg, #054D3A, #0F6E56); padding: 72px 24px; }
+    .mama-inner { max-width: 1000px; margin: 0 auto; display: flex; align-items: center; gap: 48px; flex-wrap: wrap; }
+    .mama-content { flex: 1; min-width: 260px; }
+    .mama-content .section-label { color: #9FE1CB; text-align: left; }
+    .mama-content .section-title { color: #fff; text-align: left; margin-bottom: 14px; }
+    .mama-content p { color: rgba(255,255,255,.75); font-size: 15px; margin-bottom: 28px; line-height: 1.7; }
+    .mama-perks { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; flex: 1; min-width: 260px; }
+    .perk { background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.15); border-radius: 12px; padding: 16px; }
+    .perk-icon { font-size: 20px; margin-bottom: 8px; }
+    .perk-title { font-size: 13px; font-weight: 600; color: #fff; margin-bottom: 4px; }
+    .perk-desc { font-size: 12px; color: rgba(255,255,255,.6); line-height: 1.5; }
+    .cta-section { background: var(--off); padding: 72px 24px; text-align: center; }
+    .btn-blue { background: var(--blue); color: #fff; border: none; padding: 13px 30px; border-radius: 32px; font-size: 15px; font-weight: 600; cursor: pointer; text-decoration: none; transition: background .15s; display: inline-block; }
+    .btn-blue:hover { background: var(--navy); }
+    .btn-blue-outline { background: transparent; color: var(--blue); border: 2px solid var(--blue); padding: 13px 30px; border-radius: 32px; font-size: 15px; font-weight: 600; text-decoration: none; display: inline-block; transition: background .15s; }
+    .btn-blue-outline:hover { background: var(--sky); }
+    footer { background: #042C53; padding: 40px 24px 24px; }
+    .footer-inner { max-width: 1000px; margin: 0 auto; }
+    .footer-top { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 24px; padding-bottom: 28px; border-bottom: 1px solid rgba(255,255,255,.1); margin-bottom: 20px; }
+    .footer-brand { font-family: 'Playfair Display', serif; font-size: 22px; color: #fff; display: block; margin-bottom: 6px; }
+    .footer-tagline { font-size: 13px; color: var(--sky-dk); }
+    .footer-links { display: flex; gap: 36px; flex-wrap: wrap; }
+    .footer-col h4 { font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--sky-dk); margin-bottom: 12px; }
+    .footer-col a { display: block; color: rgba(255,255,255,.55); font-size: 13px; text-decoration: none; margin-bottom: 8px; transition: color .15s; }
+    .footer-col a:hover { color: #fff; }
+    .footer-bottom { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+    .footer-copy { font-size: 12px; color: rgba(255,255,255,.35); }
+    .credit { text-align: center; font-size: 12px; color: rgba(255,255,255,.35); margin-top: 12px; }
+    .credit span { color: #9FE1CB; font-weight: 600; }
+  </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav>
+  <a href="index.html" class="nav-brand">MamaFua</a>
+  <div class="nav-links">
+    <a href="#how-it-works">How it works</a>
+    <a href="#features">Why MamaFua</a>
+    <a href="signup-mama.html">For mama fuas</a>
+    <a href="login.html">Log in</a>
+    <a href="signup-client.html" class="nav-cta">Get started</a>
+  </div>
+</nav>
+
+<!-- Hero -->
+<div class="hero">
+  <div class="hero-eyebrow">Now available in Nairobi</div>
+  <h1>Home cleanliness is <em>one tap away</em></h1>
+  <p>Connect with trusted, verified mama fuas near you. Book, pay via M-Pesa, and relax — all in one place.</p>
+  <div class="hero-btns">
+    <a href="signup-client.html" class="btn-white">Find a mama fua →</a>
+    <a href="signup-mama.html" class="btn-outline">Register as mama fua</a>
+  </div>
+</div>
+
+<!-- Stats -->
+<div class="stats">
+  <div class="stats-inner">
+    <div class="stat"><div class="stat-num">500+</div><div class="stat-lbl">Verified mama fuas</div></div>
+    <div class="stat"><div class="stat-num">2,400+</div><div class="stat-lbl">Happy clients</div></div>
+    <div class="stat"><div class="stat-num">4.8★</div><div class="stat-lbl">Average rating</div></div>
+    <div class="stat"><div class="stat-num">10 min</div><div class="stat-lbl">Average booking time</div></div>
+  </div>
+</div>
+
+<!-- How it works -->
+<section id="how-it-works">
+  <div class="container">
+    <span class="section-label">Simple process</span>
+    <h2 class="section-title">Get your laundry done in 4 steps</h2>
+    <p class="section-sub">From finding a mama fua to clean clothes — the whole process takes minutes.</p>
+    <div class="steps">
+      <div class="step-card">
+        <div class="step-num">1</div>
+        <div class="step-icon">📍</div>
+        <div class="step-title">Share your location</div>
+        <div class="step-desc">Tell us where you are and we instantly find verified mama fuas in your area.</div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">2</div>
+        <div class="step-icon">👤</div>
+        <div class="step-title">Pick your mama fua</div>
+        <div class="step-desc">Browse profiles, read real reviews, compare prices, and choose who fits you best.</div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">3</div>
+        <div class="step-icon">📅</div>
+        <div class="step-title">Book and pay</div>
+        <div class="step-desc">Confirm your booking and pay securely via M-Pesa — no cash, no stress.</div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">4</div>
+        <div class="step-icon">⭐</div>
+        <div class="step-title">Rate your service</div>
+        <div class="step-desc">Leave an honest review after the job and help others in your community.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Features -->
+<section id="features" class="section-alt">
+  <div class="container">
+    <span class="section-label">Why MamaFua</span>
+    <h2 class="section-title">Everything you need, nothing you don't</h2>
+    <p class="section-sub">Built specifically for the Kenyan market with features that matter most.</p>
+    <div class="features">
+      <div class="feat-card"><div class="feat-icon">🛡️</div><div class="feat-title">Verified profiles</div><div class="feat-desc">Every mama fua is reviewed and vetted before appearing on the platform.</div></div>
+      <div class="feat-card"><div class="feat-icon">🔒</div><div class="feat-title">Private contacts</div><div class="feat-desc">A mama fua's phone number is only revealed once you confirm a booking.</div></div>
+      <div class="feat-card"><div class="feat-icon">💚</div><div class="feat-title">M-Pesa payments</div><div class="feat-desc">Pay safely and instantly through M-Pesa. No cash handling, no awkward conversations.</div></div>
+      <div class="feat-card"><div class="feat-icon">📍</div><div class="feat-title">Location-based</div><div class="feat-desc">Only see mama fuas available in your neighbourhood — no wasted time.</div></div>
+      <div class="feat-card"><div class="feat-icon">🔁</div><div class="feat-title">Easy re-booking</div><div class="feat-desc">Loved your mama fua? Book her again with one tap — no searching needed.</div></div>
+      <div class="feat-card"><div class="feat-icon">⭐</div><div class="feat-title">Honest reviews</div><div class="feat-desc">Real ratings from real clients help you make a confident choice every time.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- Testimonials -->
+<section>
+  <div class="container">
+    <span class="section-label">Real experiences</span>
+    <h2 class="section-title">What our community says</h2>
+    <p class="section-sub">Clients and mama fuas across Nairobi share their MamaFua stories.</p>
+    <div class="reviews">
+      <div class="review-card">
+        <div class="review-stars">★★★★★</div>
+        <div class="review-text">"I found Grace on MamaFua and she has been coming every Monday since. The booking was so easy and paying via M-Pesa is incredibly convenient."</div>
+        <div class="reviewer"><div class="rev-av">JN</div><div><div class="rev-name">Jane Njeri</div><div class="rev-role">Client in Kilimani</div></div></div>
+      </div>
+      <div class="review-card">
+        <div class="review-stars">★★★★★</div>
+        <div class="review-text">"MamaFua changed my life. I now have steady clients every week and I get paid on time through M-Pesa. I even referred three of my friends to join."</div>
+        <div class="reviewer"><div class="rev-av" style="background:#0F6E56;">GW</div><div><div class="rev-name">Grace Wanjiru</div><div class="rev-role">Mama fua in Westlands</div></div></div>
+      </div>
+      <div class="review-card">
+        <div class="review-stars">★★★★★</div>
+        <div class="review-text">"I was nervous at first but the verified badge and reviews gave me confidence. Betty has been amazing and very trustworthy."</div>
+        <div class="reviewer"><div class="rev-av" style="background:#7B1FA2;">DM</div><div><div class="rev-name">David Mwangi</div><div class="rev-role">Client in Kasarani</div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- For mama fuas -->
+<div class="mama-section">
+  <div class="mama-inner">
+    <div class="mama-content">
+      <span class="section-label">For mama fuas</span>
+      <h2 class="section-title">Grow your income. Work on your terms.</h2>
+      <p>Register for free, set your own rates and availability, and connect with clients in your area today. Get paid directly to M-Pesa after every job.</p>
+      <a href="signup-mama.html" class="btn-white">Register as mama fua →</a>
+    </div>
+    <div class="mama-perks">
+      <div class="perk"><div class="perk-icon">💰</div><div class="perk-title">Set your own rate</div><div class="perk-desc">You decide what you charge. We send money straight to your M-Pesa.</div></div>
+      <div class="perk"><div class="perk-icon">🗓️</div><div class="perk-title">Work when you want</div><div class="perk-desc">Set your available days and areas. Accept only the jobs that suit you.</div></div>
+      <div class="perk"><div class="perk-icon">🏅</div><div class="perk-title">Build your reputation</div><div class="perk-desc">Great reviews earn you a verified badge and more visibility to clients.</div></div>
+      <div class="perk"><div class="perk-icon">🔒</div><div class="perk-title">Your privacy protected</div><div class="perk-desc">Your contact details are only shared with clients who confirm a booking.</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- CTA -->
+<div class="cta-section">
+  <span class="section-label">Get started today</span>
+  <h2 class="section-title" style="margin-bottom:12px;">Ready to join MamaFua?</h2>
+  <p class="section-sub">Join thousands of happy clients and mama fuas across Nairobi.</p>
+  <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;">
+    <a href="signup-client.html" class="btn-blue">Find a mama fua →</a>
+    <a href="signup-mama.html" class="btn-blue-outline">Register as mama fua</a>
+  </div>
+</div>
+
+<!-- Footer -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div>
+        <span class="footer-brand">MamaFua</span>
+        <div class="footer-tagline">Home cleanliness is one tap away.</div>
+      </div>
+      <div class="footer-links">
+        <div class="footer-col">
+          <h4>Product</h4>
+          <a href="#how-it-works">How it works</a>
+          <a href="browse.html">Browse mama fuas</a>
+          <a href="signup-client.html">For clients</a>
+          <a href="signup-mama.html">For mama fuas</a>
+        </div>
+        <div class="footer-col">
+          <h4>Account</h4>
+          <a href="signup-client.html">Sign up</a>
+          <a href="login.html">Log in</a>
+          <a href="dashboard-client.html">My dashboard</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-copy">© 2026 MamaFua. All rights reserved. Made with ❤️ in Nairobi.</div>
+      <div style="font-size:12px;color:rgba(255,255,255,.35);">🇰🇪 Kenya · M-Pesa ready</div>
+    </div>
+    <div class="credit">Designed & built with ❤️ by <span>Eyezaw Kahiga</span> & <span>Onaidra Adriano</span></div>
+  </div>
+</footer>
+
+</body>
+</html>
